@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY package*.json ./
 COPY docker-entrypoint.sh /app/docker-entrypoint.sh
-RUN npm ci && chmod +x /app/docker-entrypoint.sh
+RUN apk add --no-cache bash && npm ci && chmod +x /app/docker-entrypoint.sh
 
 COPY tsconfig.json ./
 COPY prisma ./prisma
