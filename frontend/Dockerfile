@@ -8,7 +8,7 @@ RUN npm ci
 COPY tsconfig.json vite.config.ts index.html ./
 COPY src ./src
 
-ARG VITE_API_URL=http://localhost:4000
+ARG VITE_API_URL=http://backend:4000
 ENV VITE_API_URL=${VITE_API_URL}
 
 RUN npm run build

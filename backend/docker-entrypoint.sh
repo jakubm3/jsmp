@@ -16,6 +16,11 @@ until npx prisma db push; do
   sleep "$RETRY_DELAY"
 done
 
+if [ ! -f /app/prisma/seed.ts ]; then
+  echo "Seed file /app/prisma/seed.ts is missing" >&2
+  exit 1
+fi
+
 if [ ! -f /app/.seeded ]; then
   echo "Seeding database..."
   npm run db:seed

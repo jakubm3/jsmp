@@ -8,7 +8,7 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U jsmp -d jsmp"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-jsmp} -d ${POSTGRES_DB:-jsmp}"]
       interval: 5s
       timeout: 5s
       retries: 10
