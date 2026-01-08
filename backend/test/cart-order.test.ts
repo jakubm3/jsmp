@@ -24,5 +24,12 @@ describe("cart + checkout", () => {
     const chk = await request(app).post("/api/cart/checkout").set("Authorization", `Bearer ${token}`).send({ paymentMethod: "CARD" });
     expect(chk.status).toBe(200);
     expect(chk.body.items.length).toBeGreaterThan(0);
+    expect(chk.body.payment).toBeTruthy();
+    expect(chk.body.payment.method).toBe("CARD");
+    expect(chk.body.payment.status).toBe("PAID");
+    expect(Number(chk.body.payment.amount)).toBeGreaterThan(0);
+    expect(chk.body.shipment).toBeTruthy();
+    expect(chk.body.shipment.status).toBe("PREPARING");
+    expect(chk.body.shipment.orderId).toBe(chk.body.id);
   });
 });

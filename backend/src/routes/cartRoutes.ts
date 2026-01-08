@@ -30,7 +30,7 @@ cartRoutes.post("/remove", authRequired, async (req, res) => {
 
 cartRoutes.post("/checkout", authRequired, async (req, res) => {
   const userId = getUserId(req);
-  checkoutSchema.parse(req.body);
+  const data = checkoutSchema.parse(req.body);
   const items = await prisma.cartItem.findMany({ where: { userId }, include: { product: true } });
   if (items.length === 0) throw badRequest("Cart is empty");
   const total = items.reduce((acc, it) => acc + Number(it.product.price) * it.quantity, 0);
@@ -38,10 +38,25 @@ cartRoutes.post("/checkout", authRequired, async (req, res) => {
   const order = await prisma.$transaction(async (tx) => {
     const created = await tx.order.create({
       data: { userId, totalPrice: total, status: "PAID", items: { create: items.map(it => ({ productId: it.productId, quantity: it.quantity, unitPrice: it.product.price })) } },
-      include: { items: true }
     });
+
+    await tx.payment.create({
+      data: { orderId: created.id, amount: total, method: data.paymentMethod, status: "PAID" }
+    });
+
+    await tx.shipment.create({
+      data: { orderId: created.id, status: "PREPARING" }
+    });
+
     await tx.cartItem.deleteMany({ where: { userId } });
-    return created;
+    return tx.order.findUniqueOrThrow({
+      where: { id: created.id },
+      include: {
+        items: { include: { product: { include: { images: true } } } },
+        payment: true,
+        shipment: true,
+      }
+    });
   });
 
   res.json(order);

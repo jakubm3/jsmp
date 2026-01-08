@@ -182,7 +182,7 @@ export default function AdminPage() {
         <div className="tableWrap">
           <table className="table">
             <thead>
-              <tr><th>ID</th><th>User</th><th>Status</th><th>Suma</th><th>Data</th></tr>
+              <tr><th>ID</th><th>User</th><th>Status</th><th>Płatność</th><th>Dostawa</th><th>Suma</th><th>Data</th></tr>
             </thead>
             <tbody>
               {orders.map((o) => (
@@ -190,6 +190,8 @@ export default function AdminPage() {
                   <td>{o.id}</td>
                   <td>{o.user?.email}</td>
                   <td>{o.status}</td>
+                  <td>{o.payment ? `${o.payment.method} • ${o.payment.status}` : "—"}</td>
+                  <td>{o.shipment ? o.shipment.status : "—"}</td>
                   <td>{Number(o.totalPrice).toFixed(2)}</td>
                   <td>{new Date(o.createdAt).toLocaleString()}</td>
                 </tr>
