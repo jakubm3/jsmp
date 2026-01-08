@@ -36,3 +36,13 @@ Frontend: `http://localhost:5173`
 ## Konta seed
 - Admin: `admin@local.test` / `admin123`
 - User:  `user@local.test`  / `user123`
+
+## Założenia i pokryte wymagania
+- Pełny moduł użytkownika: rejestracja/logowanie, profil z edycją nazwy.
+- Oferty: pełny CRUD z obrazkami, powiązanie z kategoriami, wyszukiwanie, filtrowanie i sortowanie.
+- Kategorie: hierarchia (parentId) + CRUD z poziomu panelu admina.
+- Ulubione, koszyk, checkout oraz historia zamówień w UI.
+- Panel admina: użytkownicy (role/aktywacja), oferty (aktywacja), kategorie, podgląd zamówień.
+- Baza danych (Prisma/PostgreSQL): 12 tabel domenowych (`User`, `Category`, `Product`, `ProductImage`, `Favorite`, `CartItem`, `Order`, `OrderItem`, `Address`, `Payment`, `Shipment`, `AuditLog`).
+- Testy backendu (Vitest + Supertest) obejmują auth, koszyk/checkout, profil, role i kategorie.
+- CI/CD: GitHub Actions uruchamia push DB/schema + seed, testy backendu i build frontendu.
