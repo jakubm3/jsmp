@@ -49,6 +49,8 @@ Frontend: `http://localhost:4173`
 Backend API: `http://localhost:4000`  
 Baza: `localhost:5432` (user: `jsmp`, hasło: `jsmp`, db: `jsmp`)
 
+Wartości `POSTGRES_*`, `JWT_SECRET` i `CORS_ORIGIN` możesz nadpisać zmiennymi środowiskowymi (np. w pliku `.env`). W środowisku produkcyjnym ustaw własny sekret JWT i hasła bazy.
+
 ## Konta seed
 - Admin: `admin@local.test` / `admin123`
 - User:  `user@local.test`  / `user123`
