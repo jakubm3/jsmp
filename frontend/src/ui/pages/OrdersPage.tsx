@@ -34,22 +34,27 @@ export default function OrdersPage() {
       ) : (
         <div className="grid">
           {orders.map((o) => (
-            <div key={o.id} className="card cardPad">
-              <div className="row space wrap">
-                <div>
-                  <div style={{ fontWeight: 950 }}>Zamówienie</div>
-                  <div className="muted" style={{ fontSize: 13 }}>
-                    ID: {o.id} • {new Date(o.createdAt).toLocaleString()}
+              <div key={o.id} className="card cardPad">
+                <div className="row space wrap">
+                  <div>
+                    <div style={{ fontWeight: 950 }}>Zamówienie</div>
+                    <div className="muted" style={{ fontSize: 13 }}>
+                      ID: {o.id} • {new Date(o.createdAt).toLocaleString()}
+                    </div>
                   </div>
+                  <span className="badge">{o.status} • {Number(o.totalPrice).toFixed(2)} zł</span>
                 </div>
-                <span className="badge">{o.status} • {Number(o.totalPrice).toFixed(2)} zł</span>
-              </div>
 
-              <div className="notice" style={{ marginTop: 12 }}>
-                <div style={{ fontWeight: 900, marginBottom: 8 }}>Pozycje:</div>
-                <ul style={{ margin: 0, paddingLeft: 18 }}>
-                  {o.items.map((it: any) => (
-                    <li key={it.id}>
+                <div className="row wrap" style={{ gap: 8, marginTop: 8 }}>
+                  <span className="badge">Płatność: {o.payment ? `${o.payment.method} • ${o.payment.status}` : "brak"}</span>
+                  <span className="badge">Dostawa: {o.shipment ? o.shipment.status : "brak"}</span>
+                </div>
+
+                <div className="notice" style={{ marginTop: 12 }}>
+                  <div style={{ fontWeight: 900, marginBottom: 8 }}>Pozycje:</div>
+                  <ul style={{ margin: 0, paddingLeft: 18 }}>
+                    {o.items.map((it: any) => (
+                      <li key={it.id}>
                       {it.product.title} — {it.quantity} szt. — {Number(it.unitPrice).toFixed(2)} zł
                     </li>
                   ))}
