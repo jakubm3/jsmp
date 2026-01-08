@@ -33,6 +33,22 @@ npm run dev
 
 Frontend: `http://localhost:5173`
 
+## Uruchomienie jednym poleceniem (Docker Compose)
+
+Wymagania: Docker + Docker Compose.
+
+1. (Opcjonalnie) skopiuj pliki środowiskowe i dostosuj:  
+   `cp backend/.env.example backend/.env`  
+   `cp frontend/.env.example frontend/.env`
+2. Uruchom całość:  
+   ```bash
+   docker compose up --build
+   ```
+
+Frontend: `http://localhost:4173`  
+Backend API: `http://localhost:4000`  
+Baza: `localhost:5432` (user: `jsmp`, hasło: `jsmp`, db: `jsmp`)
+
 ## Konta seed
 - Admin: `admin@local.test` / `admin123`
 - User:  `user@local.test`  / `user123`
