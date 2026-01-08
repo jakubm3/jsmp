@@ -70,24 +70,24 @@ export const Auth = {
 
 export const Products = {
   list(params: { search?: string; categoryId?: string; sort?: string } = {}) {
-  const qs = new URLSearchParams();
+    const qs = new URLSearchParams();
 
-  const search = (params.search ?? "").trim();
-  const categoryId = (params.categoryId ?? "").trim();
-  const sort = (params.sort ?? "").trim();
+    const search = (params.search ?? "").trim();
+    const categoryId = (params.categoryId ?? "").trim();
+    const sort = (params.sort ?? "").trim();
 
-  if (search) qs.set("search", search);
+    if (search) qs.set("search", search);
 
-  // kluczowe: NIE wysyłaj "all", "0", itp.
-  if (categoryId && categoryId !== "all" && categoryId !== "0") {
-    qs.set("categoryId", categoryId);
-  }
+    // kluczowe: NIE wysyłaj "all", "0", itp.
+    if (categoryId && categoryId !== "all" && categoryId !== "0") {
+      qs.set("categoryId", categoryId);
+    }
 
-  if (sort) qs.set("sort", sort);
+    if (sort) qs.set("sort", sort);
 
-  const q = qs.toString();
-  return api(`/api/products${q ? `?${q}` : ""}`);
-  }, 
+    const q = qs.toString();
+    return api(`/api/products${q ? `?${q}` : ""}`);
+  },
   get(id: string) {
     return api(`/api/products/${id}`);
   },
@@ -123,6 +123,15 @@ export const Products = {
 export const Categories = {
   list() {
     return api("/api/categories");
+  },
+  create(input: { name: string; parentId?: string | null }) {
+    return api("/api/categories", { method: "POST", body: JSON.stringify(input) });
+  },
+  update(id: string, input: { name: string; parentId?: string | null }) {
+    return api(`/api/categories/${id}`, { method: "PUT", body: JSON.stringify(input) });
+  },
+  remove(id: string) {
+    return api(`/api/categories/${id}`, { method: "DELETE" });
   },
 };
 
@@ -164,6 +173,9 @@ export const Admin = {
   toggleUser(id: string) {
     return api(`/api/admin/users/${id}/toggle-active`, { method: "POST", body: "{}" });
   },
+  setRole(id: string, role: "USER" | "ADMIN") {
+    return api(`/api/admin/users/${id}/role`, { method: "POST", body: JSON.stringify({ role }) });
+  },
   products() {
     return api("/api/admin/products");
   },
@@ -172,5 +184,14 @@ export const Admin = {
   },
   orders() {
     return api("/api/orders/admin");
+  },
+};
+
+export const Profile = {
+  me() {
+    return api("/api/users/me");
+  },
+  update(data: { name?: string }) {
+    return api("/api/users/me", { method: "PUT", body: JSON.stringify(data) });
   },
 };

@@ -12,7 +12,7 @@ authRoutes.post("/register", async (req, res) => {
   if (existing) throw badRequest("Email already in use");
   const user = await prisma.user.create({
     data: { email: data.email, passwordHash: await hashPassword(data.password), name: data.name },
-    select: { id: true, email: true, name: true, role: true, isActive: true }
+    select: { id: true, email: true, name: true, role: true, isActive: true, createdAt: true }
   });
   res.json({ token: signToken(user.id, user.role), user });
 });
@@ -23,5 +23,5 @@ authRoutes.post("/login", async (req, res) => {
   if (!user) throw unauthorized("Invalid credentials");
   if (!user.isActive) throw unauthorized("Account is disabled");
   if (!(await verifyPassword(data.password, user.passwordHash))) throw unauthorized("Invalid credentials");
-  res.json({ token: signToken(user.id, user.role), user: { id: user.id, email: user.email, name: user.name, role: user.role, isActive: user.isActive } });
+  res.json({ token: signToken(user.id, user.role), user: { id: user.id, email: user.email, name: user.name, role: user.role, isActive: user.isActive, createdAt: user.createdAt } });
 });

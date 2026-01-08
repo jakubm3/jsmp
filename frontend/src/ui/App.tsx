@@ -13,6 +13,7 @@ import OrdersPage from "./pages/OrdersPage";
 import AdminPage from "./pages/AdminPage";
 import SellPage from "./pages/SellPage";
 import MyProductsPage from "./pages/MyProductsPage";
+import ProfilePage from "./pages/ProfilePage";
 
 function Nav() {
   const nav = useNavigate();
@@ -54,6 +55,7 @@ function Nav() {
           <Link to="/cart" className="navLink">Koszyk</Link>
           <Link to="/favorites" className="navLink">Ulubione</Link>
           <Link to="/orders" className="navLink">Zamówienia</Link>
+          {u && <Link to="/profile" className="navLink">Profil</Link>}
           {u?.role === "ADMIN" && <Link to="/admin" className="navLink">Admin</Link>}
         </div>
 
@@ -100,6 +102,7 @@ export default function App() {
           <Route path="/cart" element={<RequireAuth><CartPage /></RequireAuth>} />
           <Route path="/favorites" element={<RequireAuth><FavoritesPage /></RequireAuth>} />
           <Route path="/orders" element={<RequireAuth><OrdersPage /></RequireAuth>} />
+          <Route path="/profile" element={<RequireAuth><ProfilePage /></RequireAuth>} />
           <Route path="/admin" element={<RequireAdmin><AdminPage /></RequireAdmin>} />
         </Routes>
       </div>
