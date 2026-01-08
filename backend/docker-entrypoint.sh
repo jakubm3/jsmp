@@ -1,5 +1,5 @@
 #!/bin/sh
-set -e
+set -eu
 
 echo "Applying database schema..."
 npx prisma db push
