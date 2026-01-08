@@ -2,11 +2,20 @@ import React from "react";
 import { Cart } from "../api";
 import { Link } from "react-router-dom";
 
+const paymentMethods = ["CARD", "BLIK", "TRANSFER"] as const;
+type PaymentMethod = (typeof paymentMethods)[number];
+const isPaymentMethod = (val: string): val is PaymentMethod => paymentMethods.includes(val as PaymentMethod);
+const paymentLabels: Record<PaymentMethod, string> = {
+  CARD: "Karta",
+  BLIK: "BLIK",
+  TRANSFER: "Przelew",
+};
+
 export default function CartPage() {
   const [items, setItems] = React.useState<any[]>([]);
   const [err, setErr] = React.useState<string | null>(null);
   const [busy, setBusy] = React.useState(false);
-  const [paymentMethod, setPaymentMethod] = React.useState<"CARD" | "BLIK" | "TRANSFER">("CARD");
+  const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>("CARD");
 
   const load = async () => {
     setErr(null);
@@ -85,12 +94,17 @@ export default function CartPage() {
               <select
                 className="select"
                 value={paymentMethod}
-                onChange={(e) => setPaymentMethod(e.target.value as typeof paymentMethod)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (isPaymentMethod(val)) setPaymentMethod(val);
+                }}
                 disabled={busy}
               >
-                <option value="CARD">Karta</option>
-                <option value="BLIK">BLIK</option>
-                <option value="TRANSFER">Przelew</option>
+                {paymentMethods.map((method) => (
+                  <option key={method} value={method}>
+                    {paymentLabels[method]}
+                  </option>
+                ))}
               </select>
             </div>
             <button className="btn btnPrimary" onClick={checkout} style={{ marginTop: 12 }} disabled={busy}>
