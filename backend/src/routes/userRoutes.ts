@@ -12,5 +12,5 @@ userRoutes.get("/me", authRequired, async (req, res) => {
 userRoutes.put("/me", authRequired, async (req, res) => {
   const id = getUserId(req);
   const data = updateProfileSchema.parse(req.body);
-  res.json(await prisma.user.update({ where: { id }, data, select: { id: true, email: true, name: true, role: true, isActive: true } }));
+  res.json(await prisma.user.update({ where: { id }, data, select: { id: true, email: true, name: true, role: true, isActive: true, createdAt: true } }));
 });

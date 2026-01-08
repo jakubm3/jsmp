@@ -57,6 +57,33 @@ async function main() {
     },
   });
 
+  // Adres demo
+  await prisma.address.upsert({
+    where: { id: "addr_user_home" },
+    update: {},
+    create: {
+      id: "addr_user_home",
+      userId: user.id,
+      line1: "Demo Street 1/2",
+      city: "Demo City",
+      zip: "00-000",
+      country: "PL",
+    },
+  });
+
+  // Log audytowy demo
+  await prisma.auditLog.create({
+    data: { userId: user.id, action: "SEED_INIT" },
+  });
+
+  // Płatność/Shipment demo (oderwane od zamówień)
+  await prisma.payment.create({
+    data: { amount: 0, method: "CARD", status: "PAID" },
+  });
+  await prisma.shipment.create({
+    data: { carrier: "DemoCarrier", status: "PREPARING" },
+  });
+
   // (Opcjonalnie) czyść stare produkty demo, żeby seed był powtarzalny:
   await prisma.productImage.deleteMany({});
   await prisma.product.deleteMany({});
