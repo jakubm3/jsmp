@@ -3,6 +3,7 @@ import { authRequired, getUserId, requireRole } from "../auth.js";
 import { prisma } from "../prisma.js";
 import { Role } from "@prisma/client";
 import { updateRoleSchema } from "../validation.js";
+import { badRequest } from "../errors.js";
 
 export const adminRoutes = Router();
 adminRoutes.use(authRequired, requireRole(Role.ADMIN));
@@ -23,7 +24,7 @@ adminRoutes.post("/users/:id/role", async (req, res) => {
 
   const currentUserId = getUserId(req);
   if (u.id === currentUserId && u.role === Role.ADMIN && data.role !== Role.ADMIN) {
-    return res.status(400).json({ message: "Cannot remove your own admin role" });
+    throw badRequest("Cannot remove your own admin role");
   }
 
   const updated = await prisma.user.update({ where: { id: u.id }, data: { role: data.role } });
