@@ -2,10 +2,20 @@ import React from "react";
 import { Cart } from "../api";
 import { Link } from "react-router-dom";
 
+const paymentMethods = ["CARD", "BLIK", "TRANSFER"] as const;
+type PaymentMethod = (typeof paymentMethods)[number];
+const isPaymentMethod = (val: string): val is PaymentMethod => paymentMethods.includes(val as PaymentMethod);
+const paymentLabels: Record<PaymentMethod, string> = {
+  CARD: "Karta",
+  BLIK: "BLIK",
+  TRANSFER: "Przelew",
+};
+
 export default function CartPage() {
   const [items, setItems] = React.useState<any[]>([]);
   const [err, setErr] = React.useState<string | null>(null);
   const [busy, setBusy] = React.useState(false);
+  const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>("CARD");
 
   const load = async () => {
     setErr(null);
@@ -23,7 +33,7 @@ export default function CartPage() {
   const checkout = async () => {
     setBusy(true);
     try {
-      await Cart.checkout("CARD");
+      await Cart.checkout(paymentMethod);
       alert("Zamówienie złożone (fikcyjna płatność: PAID).");
       await load();
       window.dispatchEvent(new Event("products-changed"));
@@ -76,6 +86,26 @@ export default function CartPage() {
             <div className="row space wrap">
               <div className="muted">Suma</div>
               <div className="price">{total.toFixed(2)} zł</div>
+            </div>
+            <div className="grid" style={{ gap: 6, marginTop: 10 }}>
+              <label className="muted" style={{ fontSize: 14 }}>
+                Wybierz metodę płatności:
+              </label>
+              <select
+                className="select"
+                value={paymentMethod}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (isPaymentMethod(val)) setPaymentMethod(val);
+                }}
+                disabled={busy}
+              >
+                {paymentMethods.map((method) => (
+                  <option key={method} value={method}>
+                    {paymentLabels[method]}
+                  </option>
+                ))}
+              </select>
             </div>
             <button className="btn btnPrimary" onClick={checkout} style={{ marginTop: 12 }} disabled={busy}>
               {busy ? "Przetwarzanie..." : "Kup teraz"}
