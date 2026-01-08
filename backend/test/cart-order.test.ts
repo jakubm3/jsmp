@@ -21,11 +21,11 @@ describe("cart + checkout", () => {
     const add = await request(app).post("/api/cart/add").set("Authorization", `Bearer ${token}`).send({ productId, quantity: 2 });
     expect(add.status).toBe(200);
 
-    const chk = await request(app).post("/api/cart/checkout").set("Authorization", `Bearer ${token}`).send({ paymentMethod: "CARD" });
+    const chk = await request(app).post("/api/cart/checkout").set("Authorization", `Bearer ${token}`).send({ paymentMethod: "BLIK" });
     expect(chk.status).toBe(200);
     expect(chk.body.items.length).toBeGreaterThan(0);
     expect(chk.body.payment).toBeTruthy();
-    expect(chk.body.payment.method).toBe("CARD");
+    expect(chk.body.payment.method).toBe("BLIK");
     expect(chk.body.payment.status).toBe("PAID");
     expect(Number(chk.body.payment.amount)).toBeGreaterThan(0);
     expect(chk.body.shipment).toBeTruthy();
