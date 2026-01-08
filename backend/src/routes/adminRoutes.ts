@@ -22,7 +22,7 @@ adminRoutes.post("/users/:id/role", async (req, res) => {
   if (!u) return res.status(404).json({ message: "User not found" });
 
   const currentUserId = getUserId(req);
-  if (u.id === currentUserId && data.role !== Role.ADMIN) {
+  if (u.id === currentUserId && u.role === Role.ADMIN && data.role !== Role.ADMIN) {
     return res.status(400).json({ message: "Cannot remove your own admin role" });
   }
 

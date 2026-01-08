@@ -85,7 +85,14 @@ export default function AdminPage() {
                 <tr key={u.id}>
                   <td>{u.email}</td>
                   <td>
-                    <select className="select" value={u.role} onChange={(e) => changeRole(u.id, e.target.value as "USER" | "ADMIN")}>
+                    <select
+                      className="select"
+                      value={u.role}
+                      onChange={(e) => {
+                        const val = e.target.value === "ADMIN" ? "ADMIN" : "USER";
+                        changeRole(u.id, val);
+                      }}
+                    >
                       <option value="USER">USER</option>
                       <option value="ADMIN">ADMIN</option>
                     </select>
