@@ -19,10 +19,12 @@ productRoutes.get("/", async (req, res) => {
   const categoryId = (req.query.categoryId as string | undefined)?.trim();
   const sort = (req.query.sort as string | undefined) ?? "newest";
 
-  if (categoryId && !/^[a-zA-Z0-9_-]+$/.test(categoryId)) throw badRequest("Invalid categoryId");
+  if (categoryId && !/^[a-zA-Z0-9_-]{1,64}$/.test(categoryId)) throw badRequest("Invalid categoryId");
 
   let categoryIds: string[] | undefined;
   if (categoryId) {
+    const existingCategory = await prisma.category.findUnique({ where: { id: categoryId } });
+    if (!existingCategory) throw notFound("Category not found");
     const rows = await prisma.$queryRaw<{ id: string }[]>`
       WITH RECURSIVE subcats AS (
         SELECT id FROM "Category" WHERE id = ${categoryId}
