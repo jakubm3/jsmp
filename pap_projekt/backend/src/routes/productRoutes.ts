@@ -19,6 +19,23 @@ productRoutes.get("/", async (req, res) => {
   const categoryId = (req.query.categoryId as string | undefined)?.trim();
   const sort = (req.query.sort as string | undefined) ?? "newest";
 
+  const categories = categoryId ? await prisma.category.findMany({ select: { id: true, parentId: true } }) : [];
+  const categoryIds = categoryId
+    ? (() => {
+        const ids = new Set<string>();
+        const stack = [categoryId];
+        while (stack.length) {
+          const current = stack.pop()!;
+          if (ids.has(current)) continue;
+          ids.add(current);
+          for (const c of categories) {
+            if (c.parentId === current) stack.push(c.id);
+          }
+        }
+        return Array.from(ids);
+      })()
+    : [];
+
   const orderBy =
     sort === "priceAsc"
       ? { price: "asc" as const }
@@ -38,7 +55,7 @@ productRoutes.get("/", async (req, res) => {
               ],
             }
           : {}),
-        ...(categoryId ? { categoryId } : {}),
+        ...(categoryId ? { categoryId: { in: categoryIds } } : {}),
       },
       include: {
         images: true,
