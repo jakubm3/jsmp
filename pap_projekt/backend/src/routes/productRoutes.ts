@@ -21,18 +21,15 @@ productRoutes.get("/", async (req, res) => {
 
   const categoryIds: string[] = [];
   if (categoryId) {
+    const categories = await prisma.category.findMany({ select: { id: true, parentId: true } });
     const collected = new Set<string>();
-    let queue = [categoryId];
-    while (queue.length) {
-      const currentBatch = queue;
-      queue = [];
-      currentBatch.forEach((id) => collected.add(id));
-      const children = await prisma.category.findMany({
-        select: { id: true },
-        where: { parentId: { in: currentBatch } },
-      });
-      for (const child of children) {
-        if (!collected.has(child.id)) queue.push(child.id);
+    const stack = [categoryId];
+    while (stack.length) {
+      const current = stack.pop();
+      if (!current || collected.has(current)) continue;
+      collected.add(current);
+      for (const c of categories) {
+        if (c.parentId === current) stack.push(c.id);
       }
     }
     categoryIds.push(...collected);
