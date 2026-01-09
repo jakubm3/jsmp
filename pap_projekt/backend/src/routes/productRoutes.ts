@@ -19,22 +19,24 @@ productRoutes.get("/", async (req, res) => {
   const categoryId = (req.query.categoryId as string | undefined)?.trim();
   const sort = (req.query.sort as string | undefined) ?? "newest";
 
-  const categories = categoryId ? await prisma.category.findMany({ select: { id: true, parentId: true } }) : [];
-  const categoryIds = categoryId
-    ? (() => {
-        const ids = new Set<string>();
-        const stack = [categoryId];
-        while (stack.length) {
-          const current = stack.pop()!;
-          if (ids.has(current)) continue;
-          ids.add(current);
-          for (const c of categories) {
-            if (c.parentId === current) stack.push(c.id);
-          }
-        }
-        return Array.from(ids);
-      })()
-    : [];
+  const categoryIds: string[] = [];
+  if (categoryId) {
+    const collected = new Set<string>();
+    let queue = [categoryId];
+    while (queue.length) {
+      const currentBatch = queue;
+      queue = [];
+      currentBatch.forEach((id) => collected.add(id));
+      const children = await prisma.category.findMany({
+        select: { id: true },
+        where: { parentId: { in: currentBatch } },
+      });
+      for (const child of children) {
+        if (!collected.has(child.id)) queue.push(child.id);
+      }
+    }
+    categoryIds.push(...collected);
+  }
 
   const orderBy =
     sort === "priceAsc"
@@ -55,7 +57,7 @@ productRoutes.get("/", async (req, res) => {
               ],
             }
           : {}),
-        ...(categoryId ? { categoryId: { in: categoryIds } } : {}),
+        ...(categoryIds.length ? { categoryId: { in: categoryIds } } : {}),
       },
       include: {
         images: true,
