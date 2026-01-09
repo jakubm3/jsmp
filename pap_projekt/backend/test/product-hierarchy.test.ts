@@ -59,7 +59,8 @@ describe("product category hierarchy", () => {
   it("returns products from child categories when filtering by parent", async () => {
     const res = await request(app).get("/api/products").query({ categoryId: parentId });
     expect(res.status).toBe(200);
-    const ids = res.body.map((p: any) => p.id);
+    const products = res.body as Array<{ id: string }>;
+    const ids = products.map((p) => p.id);
     expect(ids).toContain(productId);
   });
 });
