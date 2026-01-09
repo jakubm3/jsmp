@@ -2,7 +2,7 @@ import { Router } from "express";
 import { prisma } from "../prisma.js";
 import { authRequired, getUserId } from "../auth.js";
 import { productCreateSchema, productUpdateSchema } from "../validation.js";
-import { notFound, forbidden } from "../errors.js";
+import { notFound, forbidden, badRequest } from "../errors.js";
 import { Role } from "@prisma/client";
 
 export const productRoutes = Router();
@@ -18,6 +18,8 @@ productRoutes.get("/", async (req, res) => {
   const search = (req.query.search as string | undefined)?.trim();
   const categoryId = (req.query.categoryId as string | undefined)?.trim();
   const sort = (req.query.sort as string | undefined) ?? "newest";
+
+  if (categoryId && !/^[a-zA-Z0-9_-]+$/.test(categoryId)) throw badRequest("Invalid categoryId");
 
   let categoryIds: string[] | undefined;
   if (categoryId) {

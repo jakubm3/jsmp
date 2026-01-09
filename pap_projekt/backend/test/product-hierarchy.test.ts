@@ -7,6 +7,18 @@ import { Role } from "@prisma/client";
 
 const app = createApp();
 
+type ProductResponse = {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  categoryId: string | null;
+  isActive: boolean;
+  category?: { id: string; name: string; parentId: string | null } | null;
+  images?: Array<{ id: string; url: string; productId: string }>;
+  seller?: { id: string; email: string; name?: string | null };
+};
+
 describe("product category hierarchy", () => {
   let parentId = "";
   let childId = "";
@@ -59,7 +71,7 @@ describe("product category hierarchy", () => {
   it("returns products from child categories when filtering by parent", async () => {
     const res = await request(app).get("/api/products").query({ categoryId: parentId });
     expect(res.status).toBe(200);
-    const products = res.body as Array<{ id: string }>;
+    const products = res.body as ProductResponse[];
     const ids = products.map((p) => p.id);
     expect(ids).toContain(productId);
   });
