@@ -19,7 +19,7 @@ productRoutes.get("/", async (req, res) => {
   const categoryId = (req.query.categoryId as string | undefined)?.trim();
   const sort = (req.query.sort as string | undefined) ?? "newest";
 
-  let categoryIds: string[] = [];
+  let categoryIds: string[] | undefined;
   if (categoryId) {
     const rows = await prisma.$queryRaw<{ id: string }[]>`
       WITH RECURSIVE subcats AS (
@@ -30,7 +30,6 @@ productRoutes.get("/", async (req, res) => {
       SELECT id FROM subcats;
     `;
     categoryIds = rows.map((r) => r.id);
-    if (categoryIds.length === 0) categoryIds = [categoryId];
   }
 
   const orderBy =
@@ -52,7 +51,7 @@ productRoutes.get("/", async (req, res) => {
               ],
             }
           : {}),
-        ...(categoryIds.length ? { categoryId: { in: categoryIds } } : {}),
+        ...(categoryIds !== undefined ? { categoryId: { in: categoryIds } } : {}),
       },
       include: {
         images: true,
