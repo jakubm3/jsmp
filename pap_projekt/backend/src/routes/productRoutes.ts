@@ -19,20 +19,18 @@ productRoutes.get("/", async (req, res) => {
   const categoryId = (req.query.categoryId as string | undefined)?.trim();
   const sort = (req.query.sort as string | undefined) ?? "newest";
 
-  const categoryIds: string[] = [];
+  let categoryIds: string[] = [];
   if (categoryId) {
-    const categories = await prisma.category.findMany({ select: { id: true, parentId: true } });
-    const collected = new Set<string>();
-    const stack = [categoryId];
-    while (stack.length) {
-      const current = stack.pop();
-      if (!current || collected.has(current)) continue;
-      collected.add(current);
-      for (const c of categories) {
-        if (c.parentId === current) stack.push(c.id);
-      }
-    }
-    categoryIds.push(...collected);
+    const rows = await prisma.$queryRaw<{ id: string }[]>`
+      WITH RECURSIVE subcats AS (
+        SELECT id FROM "Category" WHERE id = ${categoryId}
+        UNION ALL
+        SELECT c.id FROM "Category" c JOIN subcats s ON c."parentId" = s.id
+      )
+      SELECT id FROM subcats;
+    `;
+    categoryIds = rows.map((r) => r.id);
+    if (categoryIds.length === 0) categoryIds = [categoryId];
   }
 
   const orderBy =
