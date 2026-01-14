@@ -67,6 +67,12 @@ Po pierwszym uruchomieniu dostępne są konta testowe:
 
 ---
 
+## Dodatkowe materiały
+
+- Szczegółowy opis, co robią kluczowe pliki modułu użytkownika/koszyka/zamówień (frontend, backend i testy): [docs/pliki-modul-uzytkownika.md](docs/pliki-modul-uzytkownika.md)
+
+---
+
 ## Zatrzymanie aplikacji
 
 Aby zatrzymać wszystkie kontenery:
