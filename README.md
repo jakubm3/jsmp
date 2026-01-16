@@ -74,3 +74,9 @@ Aby zatrzymać wszystkie kontenery:
 ```bash
 docker compose down
 ```
+
+---
+
+## Skrypt obrony projektu
+
+Pełny scenariusz prezentacji (architektura, demo, Q&A) jest opisany w pliku [`PROJECT_DEFENSE_SCRIPT_PL.md`](PROJECT_DEFENSE_SCRIPT_PL.md).
