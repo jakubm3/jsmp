@@ -6,7 +6,7 @@ Poniżej znajduje się obszerny, gotowy do wygłoszenia skrypt prezentacji i obr
 
 ## 1. Otwarcie i cel produktu
 - **Kilka zdań wprowadzających**: „Prezentuję mini-marketplace, który pozwala użytkownikom przeglądać oferty, kupować produkty, a administratorom zarządzać asortymentem i rolami użytkowników.”
-- **Problem, który rozwiązujemy**: szybki start z pełnym flow e‑commerce (konta, koszyk, płatności – w formie modelu/demo), bez konieczności skomplikowanej konfiguracji.
+- **Problem, który rozwiązujemy**: szybki start z pełnym flow e-commerce (konta, koszyk, płatności – w formie modelu/demo), bez konieczności skomplikowanej konfiguracji.
 - **Docelowi odbiorcy**: małe sklepy / sprzedawcy indywidualni, zespoły studenckie uczące się pełnego stacku, osoby uczące się DevOps (bo projekt ma dockerową orkiestrację).
 - **Zakres**: frontend w React + TS, backend w Node + TS, PostgreSQL z Prisma, komplet endpointów (auth, produkty, kategorie, koszyk, ulubione, zamówienia, panel admina).
 
@@ -32,7 +32,7 @@ Poniżej znajduje się obszerny, gotowy do wygłoszenia skrypt prezentacji i obr
 - `productRoutes.ts`: CRUD produktów (tworzenie, edycja, pobieranie list i szczegółów), opcjonalne obrazki (`ProductImage`), filtrowanie po kategorii.
 - `categoryRoutes.ts`: drzewo kategorii (model `Category` z relacją parent/children). Tworzenie/aktualizacja z walidacją.
 - `favoriteRoutes.ts`: dodawanie/usuwanie ulubionych (`Favorite` z kluczem złożonym).
-- `cartRoutes.ts`: dodanie/aktualizacja/usunięcie pozycji (`CartItem`), limit ilości 1‑99.
+- `cartRoutes.ts`: dodanie/aktualizacja/usunięcie pozycji (`CartItem`), limit ilości 1-99.
 - `orderRoutes.ts`: checkout (`checkoutSchema`), tworzenie zamówienia (`Order` + `OrderItem`), stub płatności i wysyłki (`Payment`, `Shipment`).
 - `adminRoutes.ts`: operacje administracyjne (np. nadawanie roli `ADMIN`, dezaktywacja/aktywacja użytkownika). Ochrona `requireRole(Role.ADMIN)`.
 
@@ -87,7 +87,7 @@ Poniżej znajduje się obszerny, gotowy do wygłoszenia skrypt prezentacji i obr
 3. **Przegląd katalogu**: pokaż filtrowanie po kategorii, kliknij produkt.
 4. **Ulubione**: dodaj produkt do ulubionych, pokaż zakładkę „Favorites”.
 5. **Koszyk i checkout**:
-   - Dodaj produkt do koszyka, zmień ilość (walidacja 1‑99).
+   - Dodaj produkt do koszyka, zmień ilość (walidacja 1-99).
    - Kliknij „checkout” – pokaż tworzenie zamówienia (w API: `POST /api/orders/checkout`).
 6. **Historia zamówień**: otwórz `OrdersPage.tsx`, pokaż nowy rekord.
 7. **Sprzedaż**: na `SellPage.tsx` wystaw nowy produkt (tytuł, opis, cena, kategoria, URL obrazka).
